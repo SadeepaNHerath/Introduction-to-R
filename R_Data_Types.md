@@ -401,8 +401,152 @@ matrix(v, nrow = 3)   # Vector back to matrix
 
 ### Arrays
 - Multi-dimensional generalizations of matrices
+- Store data in multiple dimensions (beyond the 2D structure of matrices)
+- All elements must be of the same type (homogeneous)
+- Useful for representing multi-dimensional data like 3D spatial data, time series across multiple variables, etc.
+
+#### Comparison with Vectors and Matrices
 ```r
-my_array <- array(1:24, dim = c(2, 3, 4))
+# Vectors: 1-dimensional, homogeneous collections
+vector_example <- c(1, 2, 3, 4)  # 1D: [1, 2, 3, 4]
+
+# Matrices: 2-dimensional, homogeneous collections
+matrix_example <- matrix(1:6, nrow = 2, ncol = 3)  # 2D: 2×3 grid
+
+# Arrays: n-dimensional, homogeneous collections 
+array_example <- array(1:24, dim = c(2, 3, 4))  # 3D: 2×3×4 cube
+```
+
+#### Creating Arrays
+```r
+# Create a 3D array (2×3×4)
+arr1 <- array(1:24, dim = c(2, 3, 4))
+
+# Create a 4D array (2×2×2×3)
+arr2 <- array(1:24, dim = c(2, 2, 2, 3))
+
+# Create an array with specific values
+arr3 <- array(0, dim = c(2, 2, 2))  # 2×2×2 array of zeros
+
+# Create an array from vectors or matrices
+mat1 <- matrix(1:6, nrow = 2)
+mat2 <- matrix(7:12, nrow = 2)
+arr4 <- array(c(mat1, mat2), dim = c(2, 3, 2))  # Stack matrices into array
+```
+
+#### Naming Array Dimensions
+```r
+# Create array with dimension names
+arr5 <- array(1:24, 
+              dim = c(2, 3, 4),
+              dimnames = list(
+                c("Row1", "Row2"),
+                c("Col1", "Col2", "Col3"),
+                c("Layer1", "Layer2", "Layer3", "Layer4")
+              ))
+
+# Add names to existing array
+arr <- array(1:24, dim = c(2, 3, 4))
+dimnames(arr) <- list(
+  c("Row1", "Row2"),
+  c("Col1", "Col2", "Col3"),
+  c("Layer1", "Layer2", "Layer3", "Layer4")
+)
+```
+
+#### Accessing Array Elements
+```r
+arr <- array(1:24, dim = c(2, 3, 4))
+
+# Access a single element (specify all dimensions)
+arr[1, 2, 3]  # Row 1, Column 2, Layer 3
+
+# Access a slice (all elements along one dimension)
+arr[1, , ]    # All elements from Row 1 (a 3×4 matrix)
+arr[, 2, ]    # All elements from Column 2 (a 2×4 matrix)
+arr[, , 3]    # All elements from Layer 3 (a 2×3 matrix)
+
+# Access a subarray
+arr[1:2, 2:3, 1:2]  # A 2×2×2 subarray
+
+# Access with dimension names (if available)
+named_arr <- array(1:24, dim = c(2, 3, 4),
+                  dimnames = list(
+                    c("Row1", "Row2"),
+                    c("Col1", "Col2", "Col3"),
+                    c("Layer1", "Layer2", "Layer3", "Layer4")
+                  ))
+named_arr["Row1", "Col2", "Layer3"]  # Element at specified position
+```
+
+#### Array Operations
+```r
+arr1 <- array(1:8, dim = c(2, 2, 2))
+arr2 <- array(9:16, dim = c(2, 2, 2))
+
+# Element-wise operations
+arr1 + arr2  # Addition
+arr1 * arr2  # Multiplication
+arr1 / arr2  # Division
+
+# Apply functions across dimensions
+apply(arr1, c(1), sum)  # Sum across dimension 1 (rows)
+apply(arr1, c(2), mean) # Mean across dimension 2 (columns)
+apply(arr1, c(3), max)  # Max across dimension 3 (layers)
+apply(arr1, c(2,3), sum) # Sum across dimensions 2 and 3
+
+# Higher-dimensional apply variants
+# - For 3D arrays, you can use apply() with different MARGIN values
+# - For more complex operations, consider using plyr or purrr packages
+```
+
+#### Array Transformations
+```r
+arr <- array(1:24, dim = c(2, 3, 4))
+
+# Reshape an array
+dim(arr) <- c(6, 4)  # Reshape to a 6×4 matrix
+dim(arr) <- c(4, 6)  # Reshape to a 4×6 matrix
+dim(arr) <- c(2, 3, 2, 2)  # Reshape to a 4D array
+
+# Convert to vector
+vec <- as.vector(arr)  # Flattens to a vector
+
+# Convert to matrix
+mat <- matrix(arr, nrow = 6)  # Reshape to a matrix
+```
+
+#### Practical Examples
+```r
+# Example 1: 3D data (time series for multiple stations)
+# Temperature data: 3 stations × 4 times × 2 years
+temp_data <- array(
+  c(20, 21, 19, 22, 23, 20, 18, 19, 20, 21, 22, 21,  # Year 1
+    19, 20, 18, 21, 22, 19, 17, 18, 19, 20, 21, 20), # Year 2
+  dim = c(3, 4, 2),
+  dimnames = list(
+    c("Station1", "Station2", "Station3"),
+    c("Spring", "Summer", "Fall", "Winter"),
+    c("Year1", "Year2")
+  )
+)
+
+# Average temperature by station
+apply(temp_data, 1, mean)
+
+# Average temperature by season
+apply(temp_data, 2, mean)
+
+# Example 2: Color image representation
+# A color image can be represented as a 3D array: height × width × 3 (RGB channels)
+# This creates a tiny 5×5 image with red, green, and blue channels
+tiny_image <- array(
+  runif(75),  # Random values between 0 and 1
+  dim = c(5, 5, 3)
+)
+
+# Extract the red channel
+red_channel <- tiny_image[, , 1]
 ```
 
 ### Data Frames
