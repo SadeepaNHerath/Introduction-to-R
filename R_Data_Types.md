@@ -285,8 +285,123 @@ c(1, 2, 3, 4) + c(10, 20)  # Becomes c(1, 2, 3, 4) + c(10, 20, 10, 20)
 ### Lists
 - Ordered collection of objects
 - Can contain different types of elements
+- Unlike vectors, can store heterogeneous data (different types in one structure)
+- Elements can be vectors, matrices, data frames, or even other lists
+
+#### Creating Lists
+```r
+# Create a list with different types of elements
+my_list <- list(a = 1:3, b = "hello", c = TRUE)
+
+# Create a nested list
+nested_list <- list(
+  numbers = 1:5,
+  text = c("a", "b", "c"),
+  sublist = list(x = 10, y = 20)
+)
+
+# Convert other objects to lists
+vec_to_list <- as.list(1:5)  # Converts vector to list
+```
+
+#### Accessing List Elements
+```r
+my_list <- list(a = 1:3, b = "hello", c = TRUE, d = c(2.5, 7.8))
+
+# Access by name using $ notation
+my_list$a        # Returns the vector 1:3
+my_list$b        # Returns "hello"
+
+# Access by position using [[ ]] (returns the element)
+my_list[[1]]     # Returns the vector 1:3
+my_list[[2]]     # Returns "hello"
+
+# Access by name using [[ ]] 
+my_list[["a"]]   # Returns the vector 1:3
+
+# Access nested elements
+nested_list <- list(info = list(name = "Alice", age = 30))
+nested_list$info$name  # Returns "Alice"
+nested_list[[1]][[1]]  # Returns "Alice"
+```
+
+#### List Slices with [ ]
+```r
+my_list <- list(a = 1:3, b = "hello", c = TRUE, d = c(2.5, 7.8))
+
+# Using [ ] returns a sublist (preserves list structure)
+my_list[1]       # Returns list with first element: list(a = 1:3)
+my_list[c(1, 3)] # Returns list with elements 1 and 3: list(a = 1:3, c = TRUE)
+my_list["a"]     # Returns list with element named "a": list(a = 1:3)
+my_list[c("a", "c")] # Returns list with elements named "a" and "c"
+```
+
+#### Simplifying vs Preserving List Structure
 ```r
 my_list <- list(a = 1:3, b = "hello", c = TRUE)
+
+# [[ ]] simplifies - extracts the element itself
+my_list[[1]]     # Returns 1 2 3 (the vector, not in a list)
+
+# [ ] preserves - returns a sublist
+my_list[1]       # Returns list(a = 1:3) (still a list)
+
+# Using $ always simplifies
+my_list$a        # Returns 1 2 3 (the vector, not in a list)
+```
+
+#### Named List Slices
+```r
+my_list <- list(a = 1:3, b = "hello", c = TRUE, d = c(2.5, 7.8))
+
+# Create a named slice
+slice1 <- my_list[c("a", "c")]
+names(slice1)    # Returns "a" "c"
+
+# Rename elements in a slice
+slice2 <- my_list[c("a", "b")]
+names(slice2) <- c("first", "second")
+slice2           # Now named 'first' and 'second' instead of 'a' and 'b'
+
+# Create a new list with renamed elements
+renamed_list <- list(
+  first = my_list$a,
+  favorite_word = my_list$b
+)
+```
+
+#### Modifying Lists
+```r
+my_list <- list(a = 1:3, b = "hello")
+
+# Add a new element
+my_list$c <- TRUE
+my_list[["d"]] <- c(2.5, 7.8)
+
+# Modify an existing element
+my_list$a <- c(10, 20, 30)
+my_list[["b"]] <- "goodbye"
+
+# Remove an element
+my_list$b <- NULL
+```
+
+#### List Operations and Functions
+```r
+# Combine lists
+list1 <- list(a = 1, b = 2)
+list2 <- list(c = 3, d = 4)
+combined <- c(list1, list2)  # Results in list(a = 1, b = 2, c = 3, d = 4)
+
+# Get list length
+length(my_list)  # Number of top-level elements
+
+# Check if an element exists
+"a" %in% names(my_list)
+
+# Apply a function to each element
+lapply(my_list, mean)  # Returns a list of means (where applicable)
+sapply(my_list, length)  # Returns a simplified vector of lengths
 ```
 
 ### Matrices
