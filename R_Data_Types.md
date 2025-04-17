@@ -291,8 +291,112 @@ my_list <- list(a = 1:3, b = "hello", c = TRUE)
 
 ### Matrices
 - Two-dimensional, homogeneous data structure
+- All elements must be of the same type
+- Stored in column-major order (columns are stacked)
+
+#### Creating Matrices
 ```r
-my_matrix <- matrix(1:9, nrow = 3, ncol = 3)
+# Create a matrix by specifying data, dimensions, and filling direction
+m1 <- matrix(1:9, nrow = 3, ncol = 3)                # Fill by column (default)
+m2 <- matrix(1:9, nrow = 3, ncol = 3, byrow = TRUE)  # Fill by row
+
+# Create a matrix from vectors
+row1 <- c(1, 2, 3)
+row2 <- c(4, 5, 6)
+m3 <- rbind(row1, row2)                              # Bind by rows
+
+col1 <- c(1, 4)
+col2 <- c(2, 5)
+col3 <- c(3, 6)
+m4 <- cbind(col1, col2, col3)                        # Bind by columns
+
+# Create diagonal matrix
+diag_mat <- diag(c(1, 2, 3))                         # 3x3 diagonal matrix
+identity_mat <- diag(3)                              # 3x3 identity matrix
+```
+
+#### Naming Rows and Columns
+```r
+# Create a matrix with names
+mat <- matrix(1:6, nrow = 2, ncol = 3)
+
+# Add row and column names
+rownames(mat) <- c("Row1", "Row2")
+colnames(mat) <- c("Col1", "Col2", "Col3")
+
+# Create with names directly
+named_mat <- matrix(1:6, nrow = 2, ncol = 3,
+                    dimnames = list(c("Row1", "Row2"), 
+                                    c("Col1", "Col2", "Col3")))
+```
+
+#### Accessing Matrix Elements
+```r
+mat <- matrix(1:9, nrow = 3, ncol = 3)
+
+# Access individual element (by row, column)
+mat[1, 2]      # Element at row 1, column 2
+
+# Access entire row or column
+mat[2, ]       # Entire 2nd row
+mat[, 3]       # Entire 3rd column
+
+# Access multiple rows/columns
+mat[1:2, 2:3]  # Rows 1-2, columns 2-3
+
+# Access by row/column names (if available)
+named_mat["Row1", "Col2"]  # Element at Row1, Col2
+```
+
+#### Matrix Operations
+```r
+A <- matrix(1:4, nrow = 2)
+B <- matrix(5:8, nrow = 2)
+
+# Arithmetic operations (element-wise)
+A + B          # Addition
+A - B          # Subtraction
+A * B          # Element-wise multiplication
+A / B          # Element-wise division
+
+# Matrix multiplication
+A %*% B        # Matrix multiplication
+
+# Other matrix operations
+t(A)           # Transpose
+solve(A)       # Matrix inverse (if square and invertible)
+det(A)         # Determinant (if square)
+eigen(A)       # Eigenvalues and eigenvectors
+
+# Apply functions to rows or columns
+apply(A, 1, sum)  # Sum of each row (MARGIN=1 for rows)
+apply(A, 2, mean) # Mean of each column (MARGIN=2 for columns)
+```
+
+#### Combining Matrices
+```r
+A <- matrix(1:4, nrow = 2)
+B <- matrix(5:8, nrow = 2)
+
+# Combine by rows
+rbind(A, B)    # Stack B below A
+
+# Combine by columns
+cbind(A, B)    # Stack B to the right of A
+
+# For matrices with different dimensions, be careful about compatibility
+```
+
+#### Matrix Transformations
+```r
+m <- matrix(1:9, nrow = 3)
+
+# Reshape a matrix
+dim(m) <- c(1, 9)     # Reshape to 1x9
+
+# Convert to/from vector
+v <- as.vector(m)     # Matrix to vector
+matrix(v, nrow = 3)   # Vector back to matrix
 ```
 
 ### Arrays
