@@ -209,10 +209,77 @@ aggregate(age ~ income_group, data = survey_data, mean)
 
 ### Vectors
 - Basic, one-dimensional data structure
-- Must contain elements of the same type
+- Must contain elements of the same type (homogeneous)
+- Created using the `c()` function (combine)
 ```r
 numeric_vector <- c(1, 2, 3, 4, 5)
 character_vector <- c("a", "b", "c")
+
+# Mixing types forces coercion to the most flexible type
+mixed_vector <- c(1, TRUE, "hello")  # All elements become character
+```
+
+#### Creating Vectors
+```r
+# Using c() function to create vectors
+numbers <- c(10, 20, 30, 40, 50)
+
+# Using sequence functions
+seq_vector <- 1:10                  # Integer sequence from 1 to 10
+seq_by <- seq(from = 0, to = 1, by = 0.1)  # 0, 0.1, 0.2, ..., 1.0
+seq_length <- seq(from = 0, to = 10, length.out = 5)  # 5 equally spaced values
+
+# Repeating values
+rep_vector <- rep(1:3, times = 2)   # 1, 2, 3, 1, 2, 3
+rep_each <- rep(1:3, each = 2)      # 1, 1, 2, 2, 3, 3
+```
+
+#### Naming Vector Elements
+```r
+# Creating a named vector
+student_scores <- c(Alice = 85, Bob = 92, Charlie = 78)
+
+# Adding names to an existing vector
+ages <- c(25, 30, 35)
+names(ages) <- c("Alice", "Bob", "Charlie")
+
+# Accessing named elements
+student_scores["Bob"]  # 92
+```
+
+#### Indexing Vectors
+```r
+x <- c(10, 20, 30, 40, 50)
+
+# R uses 1-based indexing (not 0-based like some languages)
+x[1]      # First element: 10
+x[3]      # Third element: 30
+
+# Multiple indices
+x[c(1, 3, 5)]  # Elements 1, 3, and 5: 10, 30, 50
+x[1:3]         # Elements 1 through 3: 10, 20, 30
+
+# Negative indices exclude elements
+x[-2]     # All elements except the second: 10, 30, 40, 50
+x[-(1:3)] # All elements except 1 through 3: 40, 50
+
+# Logical indexing
+x[x > 30]  # Elements greater than 30: 40, 50
+x[x %% 20 == 0]  # Elements divisible by 20: 20, 40
+```
+
+#### Vector Operations
+```r
+# Arithmetic operations are vectorized
+x <- c(1, 2, 3, 4)
+y <- c(10, 20, 30, 40)
+
+x + y      # Element-wise addition: 11, 22, 33, 44
+x * 2      # Scalar multiplication: 2, 4, 6, 8
+x^2        # Element-wise power: 1, 4, 9, 16
+
+# Recycling (shorter vectors are repeated)
+c(1, 2, 3, 4) + c(10, 20)  # Becomes c(1, 2, 3, 4) + c(10, 20, 10, 20)
 ```
 
 ### Lists
