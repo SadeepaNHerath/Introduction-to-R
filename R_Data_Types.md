@@ -677,9 +677,120 @@ df <- data.frame(
 
 ### Factors
 - Categorical data with defined levels
+- Special data structure for representing categorical variables
+- Internally stored as integers with labels (memory efficient)
+- Crucial for statistical modeling and data visualization
+
+#### Creating Factors
 ```r
+# Basic factor creation
 colors <- factor(c("red", "green", "blue", "red"))
-levels(colors)  # "blue" "green" "red"
+levels(colors)  # "blue" "green" "red" (alphabetical by default)
+
+# Factor with explicit levels
+sizes <- factor(c("small", "medium", "large", "medium"),
+                levels = c("small", "medium", "large"))
+# Preserves the specified order of levels
+
+# Factor with custom level order
+fruit <- factor(c("apple", "banana", "apple", "orange"),
+                levels = c("orange", "banana", "apple"))
+# Levels will be "orange", "banana", "apple"
+
+# Including levels not present in the data
+statuses <- factor(c("active", "inactive"),
+                   levels = c("active", "inactive", "pending"))
+# "pending" is included as a level even though it's not in the data
+```
+
+#### Ordered Factors
+```r
+# Unordered factor (default)
+sizes_unordered <- factor(c("small", "medium", "large"))
+
+# Ordered factor
+sizes_ordered <- factor(c("small", "medium", "large"),
+                        levels = c("small", "medium", "large"),
+                        ordered = TRUE)
+# or using ordered() function
+sizes_ordered2 <- ordered(c("small", "medium", "large"),
+                          levels = c("small", "medium", "large"))
+
+# Comparing ordered factors
+sizes_ordered[1] < sizes_ordered[3]  # TRUE - small < large
+sizes_unordered[1] < sizes_unordered[3]  # Error for unordered factors
+```
+
+#### Working with Factor Levels
+```r
+# Get factor levels
+education <- factor(c("HS", "College", "PhD", "Masters"))
+levels(education)  # "College" "HS" "Masters" "PhD"
+
+# Change level names
+levels(education) <- c("High School", "College", "Masters", "PhD")
+education  # Values now display with new level names
+
+# Reorder levels
+education2 <- factor(education, 
+                     levels = c("High School", "College", "Masters", "PhD"))
+
+# Combine levels
+education3 <- education
+levels(education3)[c(3, 4)] <- "Graduate"  # Collapse Masters and PhD into "Graduate"
+
+# Drop unused levels
+regions <- factor(c("North", "South", "East"))
+regions <- regions[regions != "East"]  # "East" still a level
+regions <- droplevels(regions)         # Now "East" is dropped
+```
+
+#### Converting Factors
+```r
+# Convert to character
+sizes <- factor(c("small", "medium", "large"))
+sizes_char <- as.character(sizes)
+
+# Convert to numeric (gives underlying integer codes)
+sizes_num <- as.numeric(sizes)  # Returns 2, 3, 1 (internal codes)
+
+# To get true ordering, convert to character first then numeric
+education <- factor(c("Primary", "Secondary", "Higher"))
+education_levels <- as.numeric(levels(education))[education]
+
+# Convert character to factor
+char_vec <- c("red", "blue", "green", "red")
+factor_vec <- as.factor(char_vec)
+```
+
+#### Applications in Statistics
+```r
+# Mean score by category
+category <- factor(c("A", "B", "A", "C", "B", "A"))
+scores <- c(85, 92, 78, 88, 95, 90)
+
+# Get mean score by category
+result <- aggregate(scores ~ category, FUN = mean)
+
+# Use in statistical models
+# model <- lm(score ~ category)  # Linear model with categorical predictor
+```
+
+#### Best Practices
+```r
+# Use factors for:
+# - Categorical variables in statistical analyses
+# - Grouping variables in plots
+# - Variables with a fixed, known set of possible values
+
+# Convert strings to factors on data import
+data <- read.csv("data.csv", stringsAsFactors = TRUE)
+
+# Use forcats package for advanced factor manipulation
+# library(forcats)
+# fct_infreq() - reorder by frequency
+# fct_relevel() - manual reordering
+# fct_recode() - recode levels
 ```
 
 ## Special Values
