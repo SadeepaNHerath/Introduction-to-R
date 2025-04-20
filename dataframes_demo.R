@@ -35,6 +35,14 @@ cat("Dimensions of df (rows, columns):\n")
 print(dim(df))
 cat("\n")
 
+cat("Number of rows in df:\n")
+print(nrow(df))
+cat("\n")
+
+cat("Number of columns in df:\n")
+print(ncol(df))
+cat("\n")
+
 cat("Structure of df:\n")
 str(df)
 cat("\n")
@@ -46,6 +54,41 @@ cat("\n")
 cat("Column names of df:\n")
 print(names(df))
 cat("\n")
+
+# ---- Viewing and Exploring Data ----
+cat("==== VIEWING AND EXPLORING DATA ====\n\n")
+
+cat("First few rows (head):\n")
+print(head(df, 2))  # Showing just 2 rows for demonstration
+cat("\n")
+
+cat("Last few rows (tail):\n")
+print(tail(df, 2))  # Showing just 2 rows for demonstration
+cat("\n")
+
+cat("Unique values in the name column:\n")
+print(unique(df$name))
+cat("\n")
+
+cat("Count of unique values in name column:\n")
+print(length(unique(df$name)))
+cat("\n")
+
+cat("Frequency table of names:\n")
+print(table(df$name))
+cat("\n")
+
+cat("Basic statistics for age column:\n")
+cat("Mean:", mean(df$age), "\n")
+cat("Median:", median(df$age), "\n")
+cat("Min:", min(df$age), "\n")
+cat("Max:", max(df$age), "\n")
+cat("\n")
+
+# Note: We'll add a comment explaining View() since it opens an interactive window
+# that wouldn't work well in this script output
+cat("To view the data frame in a spreadsheet-like viewer, use:\n")
+cat("View(df)  # Note: Opens interactive data viewer in RStudio\n\n")
 
 # ---- Accessing Rows and Columns ----
 cat("==== ACCESSING ROWS AND COLUMNS ====\n\n")

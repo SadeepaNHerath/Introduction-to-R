@@ -66,6 +66,44 @@ colnames(df) # Alternative to get column names
 
 # Row names
 rownames(df) # Get row names
+
+# Number of rows and columns
+nrow(df)     # Number of rows
+ncol(df)     # Number of columns
+```
+
+## Viewing and Exploring Data
+
+```r
+# View data in a spreadsheet-like viewer (note the capital V)
+View(df)     # Opens interactive data viewer in RStudio
+
+# View first few rows (default is 6)
+head(df)     # Show first 6 rows
+head(df, 10) # Show first 10 rows
+
+# View last few rows (default is 6)
+tail(df)     # Show last 6 rows
+tail(df, 3)  # Show last 3 rows
+
+# Find unique values in a column
+unique(df$name)    # Returns unique values from the name column
+
+# Count number of unique values
+length(unique(df$name))
+
+# Frequency table of a column
+table(df$name)     # Counts occurrences of each value
+
+# Basic statistics on columns
+mean(df$age)       # Mean of age column
+median(df$score)   # Median of score column
+min(df$age)        # Minimum value
+max(df$score)      # Maximum value
+range(df$age)      # Returns c(min, max)
+
+# Note: There's no built-in average() function in R
+# Use mean() instead for calculating averages
 ```
 
 ## Accessing Rows and Columns
@@ -204,31 +242,59 @@ aggregate(cbind(score, age) ~ name, data = df, FUN = mean) # Multiple aggregatio
 
 ## Joining Data Frames
 
+Joining data frames allows you to combine related data from different sources. Understanding how different joins work is essential for data analysis.
+
+### Types of Joins Illustrated
+
+```
+Data Frame 1 (df1):          Data Frame 2 (df2):
++----+------+               +----+-------+
+| id | name |               | id | score |
++----+------+               +----+-------+
+| 1  | Alice|               | 1  | 85    |
+| 2  | Bob  |               | 2  | 92    |
+| 3  | Carol|               | 4  | 77    |
++----+------+               +----+-------+
+```
+
 ### Using Base R
 
 ```r
 # Prepare sample data frames
-df1 <- data.frame(id = 1:3, name = c("Alice", "Bob", "Charlie"))
+df1 <- data.frame(id = 1:3, name = c("Alice", "Bob", "Carol"))
 df2 <- data.frame(id = c(1, 2, 4), score = c(85, 92, 77))
 
-# Inner join (only matching rows)
-merge(df1, df2, by = "id")
+# Inner join (only rows that match in both data frames)
+# Result: rows with id 1,2 only
+inner_join_result <- merge(df1, df2, by = "id")
 
-# Left join (all rows from df1)
-merge(df1, df2, by = "id", all.x = TRUE)
+# Left join (all rows from df1, matching rows from df2)
+# Result: all rows from df1; id 3 will have NA for score
+left_join_result <- merge(df1, df2, by = "id", all.x = TRUE)
 
-# Right join (all rows from df2)
-merge(df1, df2, by = "id", all.y = TRUE)
+# Right join (all rows from df2, matching rows from df1)
+# Result: all rows from df2; id 4 will have NA for name
+right_join_result <- merge(df1, df2, by = "id", all.y = TRUE)
 
-# Full join (all rows from both)
-merge(df1, df2, by = "id", all = TRUE)
+# Full join (all rows from both data frames)
+# Result: all unique ids; id 3 has NA for score, id 4 has NA for name
+full_join_result <- merge(df1, df2, by = "id", all = TRUE)
 
 # Join with different key names
 df3 <- data.frame(person_id = 1:3, score = c(85, 92, 78))
-merge(df1, df3, by.x = "id", by.y = "person_id")
+# Maps df1$id to df3$person_id
+diff_key_result <- merge(df1, df3, by.x = "id", by.y = "person_id")
 ```
 
-### Using dplyr
+### Join Tips for Beginners
+
+1. **Examine your data before joining**: Use `head()`, `str()`, or `View()` to inspect data frames.
+2. **Check key columns**: Make sure join columns have the same data type (e.g., both numeric or character).
+3. **Watch for duplicates**: Duplicated keys can cause unexpected multiplication of rows.
+4. **Handle missing values**: Decide how to deal with NAs before or after joining.
+5. **Validate results**: Always check row counts in your result to ensure the join worked as expected.
+
+### Using dplyr (More Readable Syntax)
 
 ```r
 # library(dplyr)
@@ -265,7 +331,7 @@ union_df <- unique(rbind(df_a, df_b))
 intersect_rows <- merge(df_a, df_b, by = c("id", "name"))
 
 # Difference (rows in df_a not in df_b)
-diff_rows <- df_a[!duplicated(rbind(df_a, df_b))[1:nrow(df_a)], ]
+diff_rows <- setdiff(df_a, df_b)
 ```
 
 ### Using dplyr
