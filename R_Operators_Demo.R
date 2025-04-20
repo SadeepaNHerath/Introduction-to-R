@@ -191,6 +191,9 @@ if ((max_val <- max(c(1, 5, 3))) > 4) {
 
 # Create temporary environment to show global assignment
 cat("\nGlobal assignment example:\n")
+# Declare global variable b
+b <- NULL
+
 demo_global_assignment <- function() {
   # Local variable
   a <- 5
